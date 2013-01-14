@@ -37,7 +37,7 @@ public class WordChainKata {
     private final String goal;
 
     public WordChainKata(Collection<String> words, String start, String goal) {
-        this.words = new HashSet(words);
+        this.words = new HashSet<>(words);
         this.start = start;
         this.goal = goal;
     }
@@ -47,12 +47,13 @@ public class WordChainKata {
             return Arrays.asList(start);
         }
         Deque<Node> queue = new ArrayDeque<>();
+        words.remove(start);
         queue.add(new Node(start, null));
         while (!queue.isEmpty()) {
             Node node = queue.remove();
             String word = node.word;
-            words.remove(word);
             for (String neighbor : findNeighbors(word)) {
+                words.remove(neighbor);
                 Node next = new Node(neighbor, node);
                 if (neighbor.equals(goal)) {
                     return next.toList();
