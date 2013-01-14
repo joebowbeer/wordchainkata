@@ -23,8 +23,8 @@ public class WordChainKata {
         Path path = FileSystems.getDefault().getPath(args[0]);
         String start = args[1];
         String goal = args[2];
-        assert start.length() == goal.length();
         int length = start.length();
+        assert goal.length() == length;
         Collection<String> words = new ArrayDeque<>();
         try (BufferedReader r = Files.newBufferedReader(path, Charset.defaultCharset())) {
             r.lines().filter(s -> s.length() == length).into(words);
