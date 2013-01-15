@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class WordChainKata {
 
@@ -25,9 +26,9 @@ public class WordChainKata {
         String goal = args[2];
         int length = start.length();
         assert goal.length() == length;
-        Collection<String> words = new ArrayDeque<>();
+        Collection<String> words = new ConcurrentLinkedQueue<>();
         try (BufferedReader r = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            r.lines().filter(s -> s.length() == length).into(words);
+            r.lines().parallel().filter(s -> s.length() == length).into(words);
         }
         System.out.println(new WordChainKata(words, start, goal).solve());
     }
@@ -46,7 +47,7 @@ public class WordChainKata {
         if (start.equals(goal)) {
             return Arrays.asList(start);
         }
-        Deque<Node> queue = new ArrayDeque<>();
+        Queue<Node> queue = new ArrayDeque<>();
         words.remove(start);
         queue.add(new Node(start, null));
         while (!queue.isEmpty()) {
@@ -65,7 +66,8 @@ public class WordChainKata {
     }
 
     protected Collection<String> findNeighbors(String word) {
-        return words.parallelStream().filter(s -> adjacent(s, word)).into(new ArrayDeque<String>());
+        return words.parallelStream().filter(s -> adjacent(word, s)).into(
+                new ConcurrentLinkedQueue<String>());
     }
 
     protected static boolean adjacent(String a, String b) {
@@ -86,7 +88,7 @@ public class WordChainKata {
             this.prev = prev;
         }
         public List<String> toList() {
-            ArrayList<String> list = new ArrayList<>();
+            List<String> list = new ArrayList<>();
             for (Node next = this; next != null; next = next.prev) {
                 list.add(0, next.word);
             }
