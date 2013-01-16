@@ -15,20 +15,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 public class WordChainKata {
 
     public static void main(String[] args) throws IOException {
-        assert args.length == 3; // path start goal
+        assert args.length == 3; // path-to-words start goal
         Path path = FileSystems.getDefault().getPath(args[0]);
         String start = args[1];
         String goal = args[2];
         int length = start.length();
         assert goal.length() == length;
-        Collection<String> words = new ConcurrentLinkedQueue<>();
+        final Collection<String> words;
         try (BufferedReader r = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            r.lines().parallel().filter(s -> s.length() == length).into(words);
+            words = r.lines().parallel().filter(s -> s.length() == length).collect(
+                    Collectors.<String>toList()); // TODO: toList() - w/o ambiguity?
         }
         System.out.println(new WordChainKata(words, start, goal).solve());
     }
@@ -65,9 +66,9 @@ public class WordChainKata {
         return Collections.emptyList();
     }
 
-    protected Collection<String> findNeighbors(String word) {
-        return words.parallelStream().filter(s -> adjacent(word, s)).into(
-                new ConcurrentLinkedQueue<String>());
+    protected List<String> findNeighbors(String word) {
+        return words.parallelStream().filter(s -> adjacent(word, s)).collect(
+                Collectors.<String>toList()); // TODO: toList() - w/o ambiguity?
     }
 
     protected static boolean adjacent(String a, String b) {
