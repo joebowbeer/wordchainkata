@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 public class WordChainKata {
 
@@ -28,8 +28,7 @@ public class WordChainKata {
         assert goal.length() == length;
         final Collection<String> words;
         try (BufferedReader r = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            words = r.lines().parallel().filter(s -> s.length() == length).collect(
-                    Collectors.<String>toList()); // TODO: toList() - w/o ambiguity?
+            words = r.lines().parallel().filter(s -> s.length() == length).collect(toList());
         }
         System.out.println(new WordChainKata(words, start, goal).solve());
     }
@@ -67,8 +66,7 @@ public class WordChainKata {
     }
 
     protected List<String> findNeighbors(String word) {
-        return words.parallelStream().filter(s -> adjacent(word, s)).collect(
-                Collectors.<String>toList()); // TODO: toList() - w/o ambiguity?
+        return words.parallelStream().filter(s -> adjacent(word, s)).collect(toList());
     }
 
     protected static boolean adjacent(String a, String b) {
