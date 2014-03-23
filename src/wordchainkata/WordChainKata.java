@@ -1,8 +1,6 @@
 package wordchainkata;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Stream;
+
 import static java.util.stream.Collectors.toList;
 
 public class WordChainKata {
@@ -26,11 +26,8 @@ public class WordChainKata {
         String goal = args[2];
         int length = start.length();
         assert goal.length() == length;
-        final Collection<String> words;
-        try (BufferedReader r = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            words = r.lines().parallel().filter(s -> s.length() == length).collect(toList());
-        }
-        System.out.println(new WordChainKata(words, start, goal).solve());
+        Stream<String> words = Files.lines(path).parallel().filter(s -> s.length() == length);
+        System.out.println(new WordChainKata(words.collect(toList()), start, goal).solve());
     }
 
     private final Set<String> words;
