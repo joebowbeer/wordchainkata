@@ -2,40 +2,20 @@ package wordchainkata;
 
 import java.util.Arrays;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class WordChainKataTest {
-    
-    public WordChainKataTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of {@link WordChainKata#solve()}.
      */
     @Test
     public void testSolve() {
-        System.out.println("solve");
         List<String> words = Arrays.asList("add", "aid", "cat", "cot", "did", "dog", "dot", "eel");
         assertEquals(Arrays.asList("cat", "cot", "dot", "dog"),
                 new WordChainKata(words, "cat", "dog").solve());
@@ -46,11 +26,10 @@ public class WordChainKataTest {
     }
 
     /**
-     * Test of {@link WordChainKata#adjacent(java.lang.String, java.lang.String) adjacent} method.
+     * Test of {@link WordChainKata#adjacent(String, String) adjacent} method.
      */
     @Test
     public void testAdjacent() {
-        System.out.println("adjacent");
         assertFalse(WordChainKata.adjacent("", ""));
         assertFalse(WordChainKata.adjacent("a", "a"));
         assertTrue(WordChainKata.adjacent("a", "b"));
